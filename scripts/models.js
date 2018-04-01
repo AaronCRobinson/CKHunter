@@ -178,7 +178,7 @@ function requestAuctions(offset=0, limit=20, parents=false) {
     function ajaxRequest(offset, limit) {
         Ext.Ajax.request({
             // TODO: variable type here
-            url: `${CK_API}/auctions?offset=${offset}&limit=${limit}&type=sale&orderBy=id&orderDirection=desc&parents=${parents}`,
+            url: `${CK_API}/auctions?offset=${offset}&limit=${limit}&type=sale&status=open&orderBy=id&orderDirection=desc&parents=${parents}`,
 
             success: function(response, opts) {
                 var obj = Ext.decode(response.responseText);
