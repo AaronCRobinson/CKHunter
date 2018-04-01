@@ -132,7 +132,7 @@ function createAuctionsStore() {
             }
         },
         sorters: [{
-             property: 'start_time',
+             property: 'id', //'start_time',
              direction: 'DESC'
          }]
     });
@@ -171,22 +171,31 @@ function createAuctionsView(store, target) {
     });
 }
 
+var briefWait = 800;
+var waitAMin = 61000;
+
 function requestAuctions(offset=0, limit=20, parents=false) {
-    Ext.Ajax.request({
-        // TODO: variable type here
-        url: `${CK_API}/auctions?offset=${offset}&limit=${limit}&type=sale&parents=${parents}`,
+    function ajaxRequest(offset, limit) {
+        Ext.Ajax.request({
+            // TODO: variable type here
+            url: `${CK_API}/auctions?offset=${offset}&limit=${limit}&type=sale&orderBy=id&orderDirection=desc&parents=${parents}`,
 
-        success: function(response, opts) {
-            var obj = Ext.decode(response.responseText);
-            auctions.loadRawData(obj, true);
-            if (offset + limit < obj.total)
-                requestAuctions(offset+limit, limit, parents);
-        },
+            success: function(response, opts) {
+                var obj = Ext.decode(response.responseText);
+                auctions.loadRawData(obj, true);
+                if (offset + limit < obj.total)
+                    setTimeout(()=> {requestAuctions(offset+limit, limit, parents);}, briefWait);
+            },
 
-        failure: function(response, opts) {
-            console.log('server-side failure with status code ' + response.status);
-        }
-    });
+            failure: function(response, opts) {
+                if (response.status == 429) // retry after 61 seconds
+                    setTimeout(() => {ajaxRequest(offset, limit);}, waitAMin);
+                else
+                    console.log('server-side failure with status code ' + response.status);
+            }
+        });
+    }
+    ajaxRequest(offset, limit);
 }
 
 function populationAuctions() {

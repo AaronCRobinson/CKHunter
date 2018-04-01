@@ -51,7 +51,6 @@
                                             gen = null;
                                         } else {
                                             gen = parseInt(c.value);
-                                            console.log(gen);
                                             auctions.filter([
                                                 {filterFn: function(item) { j=item; return item.getKitty().data.generation == gen; }}
                                             ]);
