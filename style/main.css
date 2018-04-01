@@ -1,0 +1,42 @@
+.sidebar {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+
+}
+
+/*.x-panel-default {
+    border-color: #FFFF33;
+}
+
+.x-tab-bar-body  {
+    background-color: #FFFF33;
+}*/
+
+/* TODO: show background again */
+/*.x-panel-body-default {
+    opacity: 0.66;
+    filter: alpha(opacity=66);
+}*/
+
+.homeIcon {
+    background-image: url("https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-ios/resources/images/pictos/home.png") !important;
+
+}
+
+.largeThumbNail {
+    width: 200px;
+    height: 200px;
+    margin-left: 6px;
+}
+
+.thumb-wrap {
+    /*float: left;*/
+    display: inline-block;
+    width: 225px;
+    height: 225px;
+    padding: 10px 4px 10px 10px;
+}
+
+#player-kitties {
+    /*margin: auto;*/
+}

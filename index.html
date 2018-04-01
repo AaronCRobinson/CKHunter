@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/classic/theme-crisp/resources/theme-crisp-all.css" rel="stylesheet" />-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/ext-all.js"></script>
+
+    <script src="scripts/models.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="style/main.css">
+    <link rel="stylesheet" type="text/css" href="style/ckstyles.css">
+</head>
+
+<script>
+    var gen=null;
+    function createDashboard() {
+        Ext.create('Ext.panel.Panel', {
+            title: 'Dashboard',
+            cls: 'dashboard',
+            frame: false,
+            border: false,
+            bodyStyle: 'background: transparent;',
+            layout: 'border',
+            renderTo:Ext.getBody(),
+            items: [
+                {
+                    xtype: 'form',
+                    region: 'north',
+                    /*layout: {
+                        type: 'vbox',
+                        align : 'stretch',
+                        pack  : 'start'
+                    },*/
+                    //height: 150,
+                    defaultType: 'textfield',
+                    defaults: {
+                        border: false,
+                        margin: 5,
+                        padding: 5
+                    },
+                    items: [
+                        {
+                            fieldLabel: 'Generation',
+                            name: 'kittyGeneration',
+                            width: 450,
+                            enableKeyEvents: true,
+                            listeners: {
+                                'blur': (c) => {
+                                    if (c.value != gen) {
+                                        auctions.clearFilter(true);
+                                        if (c.value == "") {
+                                            gen = null;
+                                        } else {
+                                            gen = parseInt(c.value);
+                                            console.log(gen);
+                                            auctions.filter([
+                                                {filterFn: function(item) { j=item; return item.getKitty().data.generation == gen; }}
+                                            ]);
+                                        }
+                                    }
+                                },
+                                'keypress': (c,e) => (e.keyCode == 13) ? c.blur() : null // blur on enter press
+                            }
+                        }
+                    ]
+                }, {
+                    region: 'center',
+                    autoScroll: true,
+                    html: '<div id="auctions"></div>'
+                }
+            ]
+        });
+    }
+
+    Ext.onReady(function(){
+        createDashboard();
+        populationAuctions();
+    });
+
+</script>
+
+</html>
