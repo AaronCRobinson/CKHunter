@@ -133,7 +133,7 @@ function createAuctionsStore() {
             }
         },
         sorters: [{
-             property: 'id', //'start_time',
+             property: 'start_time', //'id',
              direction: 'DESC'
          }]
     });
@@ -179,7 +179,7 @@ function requestAuctions(offset=0, limit=20, parents=false) {
     function ajaxRequest(offset, limit) {
         Ext.Ajax.request({
             // TODO: variable type here
-            url: `${CK_API}/auctions?offset=${offset}&limit=${limit}&type=sale&status=open&orderBy=id&orderDirection=desc&parents=${parents}`,
+            url: `${CK_API}/auctions?offset=${offset}&limit=${limit}&type=sale&status=open&orderBy=start_time&orderDirection=desc&parents=${parents}`,
 
             success: function(response, opts) {
                 var obj = Ext.decode(response.responseText);
