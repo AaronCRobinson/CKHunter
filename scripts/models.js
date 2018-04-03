@@ -63,6 +63,7 @@ function createPlayerKittiesView(store, target) {
     });
 }
 
+// TODO: rework
 function requestPlayerKitties(addr, offset=0, limit=20, parents=false) {
     //console.log(`${CK_API}/kitties?offset=${offset}&limit=${limit}&owner_wallet_address=${addr}&parents=${parents}`);
     Ext.Ajax.request({
@@ -203,4 +204,57 @@ function populationAuctions() {
     auctions = createAuctionsStore();
     createAuctionsView(auctions);
     requestAuctions();
+}
+
+Ext.define('Cattribute', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'description',   type: 'string'},
+        {name: 'type',     type: 'string'},
+        {name: 'total',    type: 'int'} // TODO: this type will have to change
+    ]
+});
+
+function createCattributesStore() {
+    return Ext.create('Ext.data.Store', {
+        model: 'Cattribute',
+        autoLoad: false,
+        proxy: {
+            type: 'ajax',
+            reader: {
+                type: 'json',
+                root: (d) => d // no root
+            }
+        }
+    });
+}
+
+function requestCattributes(callback) {
+    function ajaxRequest() {
+        Ext.Ajax.request({
+            url: `${CK_API}/cattributes`,
+
+            success: function(response, opts) {
+                var obj = Ext.decode(response.responseText);
+                cattributes.loadRawData(obj, true);
+                cattributes.group('type');
+                if (callback != null) callback();
+            },
+
+            failure: function(response, opts) {
+                if (response.status == 429) // retry after 61 seconds
+                    setTimeout(() => {ajaxRequest();}, waitAMin);
+                else
+                    console.log('server-side failure with status code ' + response.status);
+            }
+        });
+    }
+    ajaxRequest();
+}
+
+function populationCattributes(callback = null) {
+    console.log("populationCattributes");
+    cattributes = createCattributesStore();
+    //createCattributesView(cattributes); // NOTE: I think the view here creates unnecessary complexity -- just read the store directly
+    requestCattributes(callback);
 }

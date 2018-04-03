@@ -12,6 +12,7 @@
 
 <script>
     var gen=null;
+    KITTY_CLOCK_ADDRESS = '0x06012c8cf97bead5deae237070f9587f8e7a266d';
     function createDashboard() {
         Ext.create('Ext.panel.Panel', {
             title: 'Dashboard',
@@ -51,9 +52,11 @@
                                             gen = null;
                                         } else {
                                             gen = parseInt(c.value);
-                                            auctions.filter([
-                                                {filterFn: function(item) { j=item; return item.getKitty().data.generation == gen; }}
-                                            ]);
+                                            auctions.filter([{
+                                                filterFn: function(item) {
+                                                    return item.getSeller().data.address != KITTY_CLOCK_ADDRESS && item.getKitty().data.generation == gen;
+                                                }
+                                            }]);
                                         }
                                     }
                                 },
